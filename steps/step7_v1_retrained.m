@@ -2,7 +2,7 @@ function [checks, data] = step7_v1_retrained(data)
 % STEP 7  The version 1 baselines trained again from scratch with the settings of the official code
 % (version 1 Listing 2, MASTER_identification_linear.m).
 %
-% Uses the forward model that step 7a trained again (ssest, about 2.5 h, saved in
+% Uses the forward model that step 7a trained again (ssest, about 2.3 h, saved in
 % results/models), and estimates the inverse matrix again (fmincon from random start points,
 % about 1 min).
 checks = [];

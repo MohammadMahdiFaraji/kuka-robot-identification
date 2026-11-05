@@ -4,9 +4,9 @@ function run_all(mode)
 %   J. Weigand, J. Goetz, J. Ulmen, M. Ruskowski, "Dataset and Baseline for an Industrial Robot
 %   Identification Benchmark", version 2.0, April 9, 2023 (version 1: January 26, 2022).
 %
-%   run_all          steps 1-8, about 5 minutes. Step 7 uses the version 1 ssest model that was
+%   run_all          steps 1-8, about 4.5 minutes. Step 7 uses the version 1 ssest model that was
 %                    trained again once and saved in results/models.
-%   run_all('full')  first step 7a: train that ssest model again from scratch (about 2.5 hours),
+%   run_all('full')  first step 7a: train that ssest model again from scratch (about 2.3 hours),
 %                    then steps 1-8 with it. The saved model is replaced only when the training
 %                    has finished, so an interrupted run changes nothing.
 %

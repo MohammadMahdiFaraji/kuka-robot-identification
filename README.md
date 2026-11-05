@@ -22,8 +22,6 @@ The paper gives one linear model for each direction and grades it with two numbe
 - **NRMSE:** the typical error of the model divided by the typical size of the changes of the signal (its standard deviation). 0 is a perfect model, 1 is as good as always guessing the average value. The forward baseline gets 0.83 on the test data, so it is only a bit better than guessing the average. The inverse baseline gets 0.61.
 - **R²:** how much of the variation of the signal the model explains, in percent. With the correct formula R² = 100 (1 - NRMSE²), so it carries the same information.
 
-Checking a paper is a bit like baking a cake from a cookbook. If my cake looks and tastes like the photo, the recipe works. If it doesn't, either the recipe has a mistake or I made one, and I have to find out which. Here I also looked at the ingredients themselves (the raw data), to see if they are what the cookbook says.
-
 ## At a glance
 
 | | |
@@ -35,7 +33,7 @@ Checking a paper is a bit like baking a cake from a cookbook. If my cake looks a
 | What I checked | 53 statements of the paper and 5 extra observations, each with a status |
 | Main result | the result tables are reproduced exactly; 38 statements confirmed, 9 not right as printed, 3 true but not mentioned, 3 can't be decided |
 | Tools | MATLAB R2024b with System Identification, Control System, Optimization and Signal Processing toolboxes |
-| Run time | about 4.5 minutes (one model is loaded from a file, training it again takes 2.5 hours) |
+| Run time | about 4.5 minutes (one model is loaded from a file, training it again takes about 2.3 hours) |
 
 ## Results
 
@@ -47,7 +45,7 @@ Checking a paper is a bit like baking a cake from a cookbook. If my cake looks a
 | Table 5, version 2 | inverse, matrix fitted with `fminunc` | 0.6085 | 0.6085 | yes |
 | Table 4, version 1 | forward, `ssest` model saved by the authors | 1.1173 | 1.1173 | yes |
 | Table 5, version 1 | inverse, matrix saved by the authors | 1.0503 | 1.0503 | yes |
-| Table 4, version 1 | forward, `ssest` trained again from scratch (2.5 h) | 1.1173 | 1.1173 | yes |
+| Table 4, version 1 | forward, `ssest` trained again from scratch (2.3 h) | 1.1173 | 1.1173 | yes |
 | Table 5, version 1 | inverse, `fmincon` run again | 1.0503 | 1.0508 | no, see below |
 
 Each table has 28 numbers (NRMSE and R² for training and test data, for 6 joints and their mean). All of them are side by side in [`results/tables/paper_tables_reproduced.md`](results/tables/paper_tables_reproduced.md). The only table that is not exactly the same is the last one. The official code of version 1 starts the optimizer from random numbers without a fixed seed and stops it after 10000 evaluations, so nobody can get exactly the same matrix again. With seed 1 the NRMSE values differ from the paper by at most 0.001.
@@ -56,21 +54,12 @@ Each table has 28 numbers (NRMSE and R² for training and test data, for 6 joint
 
 1. **The R² values of version 1 were wrong.** The official code of version 1 measures the total variation around the mean of the model output instead of the mean of the measured signal. The version 1 tables come out the same only with this formula. With the correct formula, the mean test R² of version 1 is -40.4 % for both models, not +22.3 % and +18.3 %. A negative R² means the model is worse than guessing the average. Version 2 of the paper says it "corrected the calculation of the coefficient of determination", and this is the correction. (My course project had copied the same formula, see below.)
 2. **The 2 Hz low pass filter also shrinks the signals by 4.5 %.** The filter is a Chebyshev type I filter of order 4 with 0.2 dB ripple. For an even order the gain at 0 Hz sits at the bottom of the ripple (-0.2 dB), and `filtfilt` uses the filter twice, so slow signals are multiplied by 0.955. In the data, the benchmark positions are 0.956 times the raw positions. The positions of the inverse dataset go through the filter once more, so they are again 0.956 times the forward positions.
-3. **The velocities and accelerations of the inverse dataset are late.** The paper says these inputs are shifted by 4 ms. In the data they are computed from the position with the filter s/(1 + 0.5 s) (once for the velocity, twice for the acceleration). Compared with the measured velocity they come about 0.5 s late for the velocity and 0.9 s late for the acceleration, and they are about 10 % and 18 % smaller.
+3. **The velocities and accelerations of the inverse dataset are late.** The paper says these inputs are shifted by 4 ms. In fact they are computed from the position with the filter s/(1 + 0.5 s), and this filter delays them: the velocity comes about 0.5 s late and the acceleration about 0.9 s late, and they are 10 % and 18 % smaller than the measured ones.
 4. **The better inverse result of version 2 comes from a constant term.** From version 1 to version 2 the test NRMSE of the inverse model went from 1.05 to 0.61. Version 1 fits torque = A [q; q̇; q̈] without a constant term. Normalizing the data in version 2 adds a constant term without saying so. Plain least squares with a constant term gives exactly the test values of Table 5 of version 2. The constant is mostly the gravity torque on joints 2 and 3.
 5. **The robot runs in closed loop.** The measured joint positions follow the planned (reference) positions within 0.035 to 0.26 deg RMS. If I take 0.955 times the reference as a "model", the test NRMSE is below 0.03, while the forward baseline gets 0.83. This is not a fair model, because the reference is not an input of the benchmark. But it shows why "torque in, position out" is hard here: the controller decides where the joints go, and the torque is just what it needs to get there.
 6. **Figures 2 and 4 of the paper don't show the benchmark data.** They show each torque minus its first value (the input that the version 1 code gives to the model). For example τ2 of the training data is between -15.3 and 7.2 Nm in the data file, but between about -2 and 20 Nm in the figure.
 
-Smaller points in the text:
-- Listing 2 does not run as printed. `lsim` refuses the time vector of the data file, because its steps are not exactly 0.1 s (0.1000275 s in the test data, because the official script uses `linspace(0, N*dt, N)`).
-- Eq. (1) has no constant term, no 2π and no sample time. The real reference paths need all three.
-- The text says the frequency grid goes up to 1 Hz, but the reference paths have no frequency content above 0.2 Hz.
-- Section 2.2 says the velocity loop runs at 2500 Hz. Table 8 gives a cycle time of 0.2 ms, which is 5000 Hz.
-- Eq. (4) writes gravity and the hydraulic counterbalance as functions of the velocity, g(q̇_R) and τ_H(q̇_R). Both depend on the position, so it should be g(q_R) and τ_H(q_R).
-- The caption of Fig. 6 names colors (black, brown) that the figure doesn't use.
-- Table 3 says the motor torque is the sum of the feed-forward and the feedback torque. In the data this sum does not explain the measured torque.
-
-Every finding with its numbers is explained in [`docs/findings.md`](docs/findings.md), and all 58 checks are in [`results/all_checks.csv`](results/all_checks.csv).
+There are also a few smaller mistakes in the text. For example, Listing 2 does not run as printed, the velocity loop has two different rates (2500 Hz in Section 2.2, 5000 Hz in Table 8), and eq. (4) writes gravity as a function of the velocity instead of the position. Every finding with its numbers is explained in [`docs/findings.md`](docs/findings.md), and all 58 checks are in [`results/all_checks.csv`](results/all_checks.csv).
 
 ### 3. All checks
 
@@ -110,7 +99,7 @@ More details are in [`docs/changes_from_course_project.md`](docs/changes_from_co
 ## Limitations
 
 - Tested only with MATLAB R2024b on Windows. Another MATLAB version may give slightly different `n4sid` or `ssest` models, so the last digit of a table could change.
-- The normal run loads the version 1 `ssest` model that I trained again once (2.5 hours) from `results/models/`. `run_all('full')` trains it again.
+- The normal run loads the version 1 `ssest` model that I trained again once (about 2.3 hours) from `results/models/`. `run_all('full')` trains it again.
 - Some checks compare with values that I read by eye from the PDF (F1, F2, X4). The evidence text of these checks says so.
 - The PDF files of the paper are not in this repository, because I could not find their license. The links are below.
 - I checked the statements that can be tested with the data. Other parts of the paper, for example the nonlinear robot model of Appendix A, are not checked.
@@ -123,7 +112,7 @@ More details are in [`docs/changes_from_course_project.md`](docs/changes_from_co
    run_all
    ```
    After about 4.5 minutes the results are in `results/`: `all_checks.csv`, `summary.txt`, `tables/`, `figures/` and `logs/`.
-3. To train the version 1 `ssest` model again as well (about 2.5 hours more):
+3. To train the version 1 `ssest` model again as well (about 2.3 hours more):
    ```
    run_all('full')
    ```

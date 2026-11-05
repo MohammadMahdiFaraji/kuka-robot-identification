@@ -1,7 +1,7 @@
 function step7a_retrain_v1_ssest(fw, file)
 % STEP 7a  Train the version 1 forward model again from scratch, with the settings of the official
 % code (MASTER_identification_linear.m with enable_new_identification = true): ssest with 12
-% states and Focus = simulation on the zero-initialized input. Takes about 2.5 hours.
+% states and Focus = simulation on the zero-initialized input. Takes about 2.3 hours.
 % Only run by run_all('full').
 %
 %   fw   : contents of forward_identification_without_raw_data.mat
