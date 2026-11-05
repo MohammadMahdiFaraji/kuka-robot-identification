@@ -164,7 +164,7 @@ plot_joints(fw.time_train, u_train_zero, [], 'tau', 'Nm', fullfile(figures, 'fig
 plot_joints(fw.time_train, fw.y_train, [], 'q', 'deg', fullfile(figures, 'fig5_train_position.png'));
 
 % Fig. 6: power spectrum of the training torques and positions, with the colors of the caption
-fig = figure('Visible', 'off', 'Position', [0 0 1100 420]);
+fig = figure('Visible', 'off');
 colors = [0 0 0; 1 0 0; .5 0 .5; 0 .6 0; 0 0 1; .55 .27 .07];
 signals = {fw.u_train, fw.y_train};
 titles = {'torque (train)', 'position (train)'};
@@ -181,7 +181,10 @@ for p = 1:2
     ylabel('Power Spectrum (dB)');
     title(titles{p});
 end
-exportgraphics(fig, fullfile(figures, 'fig6_spectrum.png'), 'Resolution', 150);
+% fixed paper size, so that the picture does not depend on the screen (see plot_joints)
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0 0 11 4.2];
+print(fig, fullfile(figures, 'fig6_spectrum.png'), '-dpng', '-r150');
 close(fig);
 end
 

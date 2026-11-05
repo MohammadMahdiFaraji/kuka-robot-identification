@@ -1,7 +1,7 @@
 function plot_joints(t, y, yhat, symbol, unit, file)
 % PLOT_JOINTS  Six joint plots under each other, like the figures of the paper, saved as PNG.
 % Blue: measured signal. Red: model output (leave yhat empty for no model).
-fig = figure('Visible', 'off', 'Position', [0 0 1000 900]);
+fig = figure('Visible', 'off');
 for j = 1:6
     subplot(6, 1, j);
     plot(t, y(j,:), 'b');
@@ -20,6 +20,11 @@ for j = 1:6
     end
 end
 xlabel('Time (s)');
-exportgraphics(fig, file, 'Resolution', 120);
+% the size of the picture is set as a paper size (10 x 9 inches) and not with the window:
+% MATLAB makes a window smaller when it is taller than the screen, and then some figures
+% came out smaller than others
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0 0 10 9];
+print(fig, file, '-dpng', '-r120');
 close(fig);
 end
