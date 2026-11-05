@@ -13,10 +13,10 @@ for j = 1:6
     grid on;
     xlim([t(1) t(end)]);
     if j == 1 && ~isempty(yhat)
-        % the legend goes above the first plot; keep the plot as large as the other five
-        position = get(gca, 'Position');
-        legend({'measured', 'model'}, 'Location', 'northoutside', 'Orientation', 'horizontal');
-        set(gca, 'Position', position);
+        % legend at a fixed place at the top of the figure, above the first plot,
+        % so that the first plot keeps the same size as the other five
+        lgd = legend({'measured', 'model'}, 'Orientation', 'horizontal');
+        lgd.Position = [0.4 0.94 0.2 0.025];
     end
 end
 xlabel('Time (s)');

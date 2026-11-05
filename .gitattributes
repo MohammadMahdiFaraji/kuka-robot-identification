@@ -1,3 +1,12 @@
+# text files keep Unix line endings (LF) also on Windows, like the logs that MATLAB writes
+*.m text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.log text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+LICENSE text eol=lf
+
 # my original scripts stay exactly as they were handed in (Windows line endings)
 legacy/original_course_submission/*.m -text
 legacy/original_course_submission/*.csv -text
