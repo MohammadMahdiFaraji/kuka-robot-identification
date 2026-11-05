@@ -1,0 +1,10 @@
+# my original scripts stay exactly as they were handed in (Windows line endings)
+legacy/original_course_submission/*.m -text
+legacy/original_course_submission/*.csv -text
+
+# the CSV files are written by MATLAB (writetable, Windows line endings); keep them as they are
+results/*.csv -text
+results/tables/*.csv -text
+
+*.mat binary
+*.png binary
