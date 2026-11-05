@@ -1,0 +1,6 @@
+[MATCH       ] B4    (5.2, Tab. 5) inverse baseline (Listing 3: normalized data, 6x18 matrix, fminunc, rng(1234))
+               paper: Tab. 5
+               found: train NRMSE [0.418 0.595 0.555 0.673 0.679 0.551], mean 0.5785; train R2 [82.502 64.615 69.228 54.72 53.902 69.635], mean 65.767; test NRMSE [0.447 0.681 0.549 0.705 0.71 0.559], mean 0.6085; test R2 [79.982 53.607 69.841 50.253 49.615 68.723], mean 62.0035 (exitflag 1, max|A - A_LS| = 4.8e-06)
+[CONSISTENT  ] M2    (4, eq. (5)-(6)) NRMSE and R2 of Tables 4 and 5 (v2)
+               paper: two metrics
+               found: every printed pair satisfies R2 = 100 (1 - NRMSE^2) to 0.085 (rounding of NRMSE to 3 decimals), so the two metrics carry the same information

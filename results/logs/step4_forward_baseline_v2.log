@@ -1,0 +1,12 @@
+[MATCH       ] B1    (5.1, Tab. 4) forward baseline (Listing 2: normalized data, n4sid nx = 12, Focus = simulation, zero initial state)
+               paper: Tab. 4
+               found: train NRMSE [0.635 0.717 0.726 0.866 0.865 0.838], mean 0.7745; train R2 [59.733 48.603 47.323 25.083 25.099 29.852], mean 39.2822; test NRMSE [0.638 0.829 0.876 0.894 0.869 0.845], mean 0.82517; test R2 [59.236 31.293 23.179 20.098 24.534 28.513], mean 31.1422 (stable 1)
+[DEVIATION   ] B2    (Listing 2) Listing 2 runs as printed
+               paper: runs
+               found: lsim(robot_model, u_test, time_test): "When specifying a time vector for time response simulations, the time step must match the sample time of discrete-time models.". Same numbers with an exact 0.1 s time grid; time_true is not a variable of the data file
+[CONSISTENT  ] M1    (4.1, eq. (5)) sigma_q,n: "standard deviation regarding position" (data set not specified)
+               paper: ambiguous
+               found: Tab. 4 test values reproduce with sigma of the test data (N-1: yes, N: 0); with sigma of the training data: 0 (NRMSE [0.543 0.804 0.818 0.901 0.71 0.772])
+[OBSERVATION ] B3    (5.1) "set the initial state to zero"
+               paper: -
+               found: with an estimated initial state the test averages would be NRMSE 0.8200, R2 32.04%

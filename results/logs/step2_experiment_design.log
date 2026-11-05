@@ -1,0 +1,42 @@
+[MATCH       ] D1    (2.1) 2 x 36 trajectories x 60.6 s = 73 min; 67 min training, 6 min test
+               paper: 73 / 67 / 6 min
+               found: 72.7 / 66.6 / 6.1 min (12 files x 90881 samples at 250 Hz)
+[MATCH       ] D2    (2.1) 36 trajectories of 60.6 s each, K = 15147 steps at 4 ms
+               paper: 72 runs of 60.6 s
+               found: 72 runs; each file = 6 x 15146.8 samples (60.59 s); all boundaries k*15147 lie in rest phases: 1; motion 56.6-57.2 s + rest 3.4-3.9 s between runs
+[MATCH       ] D3    (2.1) all movements start and end in the homing position
+               paper: same pose
+               found: max |q_ref - home| = 2e-07 deg at all 84 rest points (measured q within 0.017 deg); home = [0 0 0 0 0 0] deg
+[MATCH       ] D4    (2.1 (2c)) all derivatives are zero at start and end of each trajectory
+               paper: 0
+               found: max |qd_ref| = 2.9e-06 deg/s, max |qdd_ref| = 3.6e-05 deg/s^2 at the rest points
+[MATCH       ] D2b   (2.1, eq. (1)) each reference is a sum of V = 10 sine/cosine terms with base frequency 1/60 Hz
+               paper: V = 10, 1/60 Hz
+               found: least-squares fit to all 72 runs (6 joints, 4 ms grid): max residual 7e-06 deg with V = 10 and period 60 s; with V = 9 the residual is 2.7 deg, so all 10 harmonics are used
+[DEVIATION   ] D2c   (2.1, eq. (1)) eq. (1) as printed: q_n(k) = sum_v A/(omega v) sin(omega v k) - B/(omega v) cos(omega v k)
+               paper: no constant term
+               found: the series needs a constant term (the integration constant of the velocity series): without it the residual is 14.9 deg. The printed form also omits 2*pi and the sample time in the argument
+[MATCH       ] D4b   (2.1, eq. (2c)) derivatives m = 1, 2, 3 (velocity, acceleration, jerk) are zero at the start and the end of each trajectory
+               paper: 0
+               found: from the fitted series at t = 0 and t = t_K: max |qd| = 2e-07 deg/s, |qdd| = 3e-06 deg/s^2, |qddd| = 6e-05 deg/s^3
+[UNCLEAR     ] D8b   (2.1, eq. (2b)) acceleration and jerk stay within the limits
+               paper: limits not published
+               found: max |qdd| = [37.2 18.5 30.5 49.7 39.3 52.2] deg/s^2, max |qddd| = [29.8 17 24 42.5 34.4 46] deg/s^3 per joint; Tab. 7 gives position and velocity limits only
+[MATCH       ] D5    (2.1) 36 different trajectories, each executed twice
+               paper: 36 unique, 2 runs each
+               found: 36 unique references, runs per reference: 2; order inside every file A B C A B C: 1; twins identical to 0 deg, closest non-twin pair differs by 99.2 deg
+[MATCH       ] D6    (2.2) the test trajectories are independent of the training trajectories
+               paper: independent
+               found: 3 test references, 0 shared with training
+[CONSISTENT  ] D7    (2.1/2.2) V = 10 sine/cosine terms, base frequency 1/60 Hz; grid "up to 1 Hz"; position spectrum "less than 0.3 Hz"
+               paper: V/60 = 0.167 Hz; 1 Hz; < 0.3 Hz
+               found: 99.9% of the reference power below 0.165 Hz; highest line above -60 dB at 0.198 Hz
+[DEVIATION   ] D7b   (2.1) text: "frequency grid ... to a maximum frequency of 1 Hz"
+               paper: 1 Hz
+               found: V = 10 harmonics of 1/60 Hz end at 0.167 Hz; the data end at 0.198 Hz
+[MATCH       ] D8    (Tab. 7) reference positions and velocities stay within the applied limits
+               paper: [-90 90 63.4;-30 40 61.7;-110 40 59.5;-180 180 91.5;-90 90 84.8;-180 180 131.3]
+               found: J1 [-71.9, 72.5] |v|<=49.9; J2 [-25.2, 38.7] |v|<=21.4; J3 [-102.2, 35.8] |v|<=41.4; J4 [-129.2, 118.8] |v|<=67.3; J5 [-75.8, 80.2] |v|<=49.2; J6 [-127.4, 108.3] |v|<=70.2 | measured within limits (0.5 deg / 1 deg/s margin): 1
+[MATCH       ] T3    (Tab. 7) "In the experiments, we applied a reduced subset" of the absolute limits
+               paper: subset
+               found: applied position and velocity limits lie inside the absolute ones: 1; applied/absolute velocity = [0.749 0.75 0.75 0.75 0.75 0.75]

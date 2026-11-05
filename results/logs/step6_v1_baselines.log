@@ -1,0 +1,18 @@
+[MATCH       ] L1    (v1 Tab. 4) v1 forward baseline (ssest, zero-initialized input) with the authors' saved model
+               paper: v1 Tab. 4
+               found: train NRMSE [0.681 0.844 0.749 0.859 0.853 0.829], mean 0.8025; train R2 [55.359 28.744 43.898 26.496 27.252 31.567], mean 35.5527; test NRMSE [0.841 1.169 1.965 0.89 0.887 0.952], mean 1.1173; test R2 [44.045 9.54 6.532 23.964 25.936 23.87], mean 22.3145
+[MATCH       ] L2    (v1 Tab. 5) v1 inverse baseline with the authors' saved matrix
+               paper: v1 Tab. 5
+               found: train NRMSE [0.419 1.582 1.893 0.673 1.012 0.552], mean 1.0218; train R2 [82.453 -48.673 -75.514 54.677 13.096 69.582], mean 15.9368; test NRMSE [0.447 1.546 1.964 0.709 1.077 0.559], mean 1.0503; test R2 [80.001 -35.737 -62.339 49.696 9.613 68.691], mean 18.3208
+[MATCH       ] L3    (v2 changelog) "Corrected the calculation of the coefficient of determination"
+               paper: v1 R2 was wrong
+               found: v1 numbers only reproduce with SST = sum((y - mean(y_sim))^2) (MASTER_identification_linear.m); with the correct SST the v1 test R2 averages are -40.4% (forward) and -40.4% (inverse), not 22.3% and 18.3%. The printed v1 pairs violate R2 = 100 (1 - NRMSE^2) by up to 293 points (v2: 0.085)
+[MATCH       ] L4    (v1 Listing / 5.2) v1 inverse matrix = least-squares fit (fmincon, 1e4 evaluations, random x0)
+               paper: LS optimum
+               found: saved v1 matrix has 1.00x the LS optimum training cost; the LS matrix on the same raw data gives test NRMSE 1.0508 vs 1.0505
+[OBSERVATION ] L6    (5.2 / v2 changelog) "Changed the linear baseline model" (inverse: v1 test NRMSE 1.05 -> v2 0.61)
+               paper: -
+               found: v1 fits tau = A*[q; qd; qdd] without an offset; the v2 normalization adds the offset implicitly. Plain least squares with an offset on the raw data gives test NRMSE [0.447 0.681 0.549 0.705 0.71 0.559], i.e. Tab. 5 of v2 exactly: 1. The gain comes from the offset (gravity torque on joints 2, 3), not from fminunc
+[CONSISTENT  ] L5    (5.3) "the results [ssest v1 vs n4sid v2] differ significantly"
+               paper: differ
+               found: test NRMSE 1.117 (v1) vs 0.825 (v2); correct R2 -40.4% vs 31.1%

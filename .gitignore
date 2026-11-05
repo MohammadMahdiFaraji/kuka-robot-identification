@@ -1,0 +1,10 @@
+# the official data archive (download it, see data/README.md)
+data/*
+!data/README.md
+
+# models that run_all.m makes again in every run (only the long ssest training is kept)
+results/models/v2_forward_n4sid.mat
+results/models/v2_inverse_fminunc.mat
+results/models/v1_inverse_retrained.mat
+results/models/v1_ssest_retrained_new.mat
+results/logs/*_RUNNING.log

@@ -1,0 +1,15 @@
+retrained ssest model: results/models/v1_ssest_retrained.mat
+  trained by run_all('full'), step 7a (steps/step7a_retrain_v1_ssest.m, same code under an earlier file name), started 2026-11-03 23:12, wall time 8264.8 s, MATLAB CPU time 5597.5 s
+ssest(nx=12, Focus=simulation): Ts=0 | stable=1 | iterations=[20 3] | stop: Maximum number of iterations reached. / No improvement along the search direction with line search.
+saved poles    : [-0.2257 -0.4084 -0.2364-0.6455i -0.2364+0.6455i -0.4911-0.5835i -0.4911+0.5835i -0.6054-0.5697i -0.6054+0.5697i -0.0751-1.4583i -0.0751+1.4583i -1.6394 -3.3267]
+retrained poles: [-0.2257 -0.4084 -0.2364-0.6455i -0.2364+0.6455i -0.4911-0.5835i -0.4911+0.5835i -0.6054-0.5697i -0.6054+0.5697i -0.0751-1.4583i -0.0751+1.4583i -1.6394 -3.3267]
+[MATCH       ] L7    (v1 Tab. 4, Listing 2) v1 forward baseline retrained from scratch (ssest, nx = 12, Focus = simulation)
+               paper: v1 Tab. 4
+               found: train NRMSE [0.681 0.844 0.749 0.859 0.853 0.829], mean 0.8025; train R2 [55.359 28.744 43.898 26.496 27.252 31.567], mean 35.5527; test NRMSE [0.841 1.169 1.965 0.89 0.887 0.952], mean 1.1173; test R2 [44.045 9.54 6.532 23.964 25.936 23.87], mean 22.3145; retrained vs saved model: max output difference 5.1e-06 deg, max pole difference 7.6e-08, stop after [20 3] iterations
+fmincon seed 1: exitflag 0, funcCount 10043, cost 3.13149e+06 (LS 3.13149e+06), max|A-A_ls| = 0.004865
+fmincon seed 2: exitflag 0, funcCount 10045, cost 3.13159e+06 (LS 3.13149e+06), max|A-A_ls| = 0.01283
+fmincon seed 3: exitflag 0, funcCount 10032, cost 3.13159e+06 (LS 3.13149e+06), max|A-A_ls| = 0.01554
+saved v1 matrix: max|A_saved - A_ls| = 0.009824
+[CONSISTENT  ] L8    (v1 Tab. 5) v1 inverse baseline retrained from scratch (fmincon)
+               paper: v1 Tab. 5
+               found: train NRMSE [0.419 1.582 1.893 0.673 1.012 0.552], mean 1.0218; train R2 [82.453 -48.683 -75.502 54.681 13.229 69.588], mean 15.961 [paper [82.453 -48.673 -75.514 54.677 13.096 69.582], mean 15.9368]; test NRMSE [0.447 1.546 1.964 0.71 1.078 0.56], mean 1.0508 [paper [0.447 1.546 1.964 0.709 1.077 0.559], mean 1.0503]; test R2 [80.007 -35.748 -62.334 49.642 9.569 68.579], mean 18.2858 [paper [80.001 -35.737 -62.339 49.696 9.613 68.691], mean 18.3208]; the official code starts fmincon from an unseeded randn and stops at 1e4 evaluations, so the saved matrix cannot be regenerated exactly; seeds 1-3 end within 0.0155 of the least-squares optimum; max NRMSE difference to the paper 0.001; LS optimum test NRMSE mean 1.0508

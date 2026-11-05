@@ -1,0 +1,68 @@
+MATLAB 24.2.0.2712019 (R2024b)
+
+MATCH         23
+CONSISTENT    15
+DEVIATION      9
+UNDOCUMENTED   3
+UNCLEAR        3
+OBSERVATION    5
+total         58 (53 claims of the paper + 5 observations)
+
+T1    MATCH        archives: two benchmark mat-files; raw mat-files of all experiments; scripts for post-processing and baseline
+R1    MATCH        raw data: unfiltered, 250 Hz; reference position/velocity, position and velocity from resolver and secondary encoder, tau, tau_FF, tau_FB
+D9    MATCH        K = 39988 training and K = 3636 test samples at 100 ms
+D10   DEVIATION    sample time 100 ms (Listing 2 uses dt = 0.1)
+D11   MATCH        filter (Chebyshev-I, order 4, 2 Hz, 0.2 dB, filtfilt) and keep every 25th sample
+D12   MATCH        link-side encoders for joints 1-3, motor resolvers for joints 4-6
+D13   UNDOCUMENTED "low pass filtered with a cutoff of 2 Hz" (implies unit gain in the passband)
+D1    MATCH        2 x 36 trajectories x 60.6 s = 73 min; 67 min training, 6 min test
+D2    MATCH        36 trajectories of 60.6 s each, K = 15147 steps at 4 ms
+D3    MATCH        all movements start and end in the homing position
+D4    MATCH        all derivatives are zero at start and end of each trajectory
+D2b   MATCH        each reference is a sum of V = 10 sine/cosine terms with base frequency 1/60 Hz
+D2c   DEVIATION    eq. (1) as printed: q_n(k) = sum_v A/(omega v) sin(omega v k) - B/(omega v) cos(omega v k)
+D4b   MATCH        derivatives m = 1, 2, 3 (velocity, acceleration, jerk) are zero at the start and the end of each trajectory
+D8b   UNCLEAR      acceleration and jerk stay within the limits
+D5    MATCH        36 different trajectories, each executed twice
+D6    MATCH        the test trajectories are independent of the training trajectories
+D7    CONSISTENT   V = 10 sine/cosine terms, base frequency 1/60 Hz; grid "up to 1 Hz"; position spectrum "less than 0.3 Hz"
+D7b   DEVIATION    text: "frequency grid ... to a maximum frequency of 1 Hz"
+D8    MATCH        reference positions and velocities stay within the applied limits
+T3    MATCH        "In the experiments, we applied a reduced subset" of the absolute limits
+R2    UNDOCUMENTED joint velocity "measured by" motor resolver and secondary encoder
+R3    MATCH        reference velocity qd_R belongs to the reference position q_R
+A1    CONSISTENT   gearbox deformation and backlash (motor side vs link side) sum up to about 0.01-0.05 deg
+A2    UNCLEAR      software resolution: SE 4.3-6.5e-6 deg (joints 1-3), RE 82-240e-6 deg (joints 1-6)
+D14   UNDOCUMENTED inverse inputs: position, velocity, acceleration time-shifted by 4 ms
+D15   CONSISTENT   inverse velocity/acceleration at the start of the data (robot at rest in home pose)
+D14b  CONSISTENT   "A time-shift of 4 ms is required to compensate for the feedback controller computation time"
+D16   DEVIATION    absolute motor torque tau = tau_FF + tau_FB
+D17   UNCLEAR      tau_M = tau_FF + P (qR - q) + D (qdR - qd)
+B1    MATCH        forward baseline (Listing 2: normalized data, n4sid nx = 12, Focus = simulation, zero initial state)
+B2    DEVIATION    Listing 2 runs as printed
+M1    CONSISTENT   sigma_q,n: "standard deviation regarding position" (data set not specified)
+B3    OBSERVATION  "set the initial state to zero"
+B4    MATCH        inverse baseline (Listing 3: normalized data, 6x18 matrix, fminunc, rng(1234))
+M2    CONSISTENT   NRMSE and R2 of Tables 4 and 5 (v2)
+L1    MATCH        v1 forward baseline (ssest, zero-initialized input) with the authors' saved model
+L2    MATCH        v1 inverse baseline with the authors' saved matrix
+L3    MATCH        "Corrected the calculation of the coefficient of determination"
+L4    MATCH        v1 inverse matrix = least-squares fit (fmincon, 1e4 evaluations, random x0)
+L6    OBSERVATION  "Changed the linear baseline model" (inverse: v1 test NRMSE 1.05 -> v2 0.61)
+L5    CONSISTENT   "the results [ssest v1 vs n4sid v2] differ significantly"
+L7    MATCH        v1 forward baseline retrained from scratch (ssest, nx = 12, Focus = simulation)
+L8    CONSISTENT   v1 inverse baseline retrained from scratch (fmincon)
+D18   CONSISTENT   low-velocity phases occur in the first and last ~5 s of each trajectory
+D22   CONSISTENT   "different torque input signals lead to the same, almost constant position output"
+D19   CONSISTENT   max torque of joints 1-3 is about triple that of joints 4-6 (Fig. 2)
+D20   CONSISTENT   motion amplitude of joints 4-6 is a multiple of joints 1-3 (Fig. 3)
+D21   CONSISTENT   gravitational loads act primarily on joints 2 and 3
+O1    OBSERVATION  closed loop: measured positions follow the reference closely
+O2    OBSERVATION  repeatability: twin executions of the same reference
+O3    OBSERVATION  the files are combined in alphabetical dir() order
+F1    DEVIATION    torques "as presented in Fig. 2 ... and 4", applied "without modification"
+F2    CONSISTENT   positions and baseline results in the figures
+X1    DEVIATION    "position control 1250 Hz, velocity control 2500 Hz and current control 20 kHz"
+X2    CONSISTENT   "The motor power supply ranges from 5.5 kW to 16 kW"
+X3    DEVIATION    inverse model contains g(qd_R) and tau_H(qd_R)
+X4    DEVIATION    "Black: Joint 1. Red: Joint 2. Purple: Joint 3. Green: Joint 4. Blue: Joint 5. Brown: Joint 6."
